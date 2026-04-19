@@ -1,0 +1,220 @@
+/* Dark Theme Stylesheet for StreamX */
+
+QWidget {
+    background-color: #2b2b2b;
+    color: #ffffff;
+    font-family: "Segoe UI", Arial, sans-serif;
+    font-size: 10pt;
+}
+
+QMainWindow {
+    background-color: #2b2b2b;
+}
+
+QTabWidget {
+    background-color: #2b2b2b;
+    border: 1px solid #555555;
+}
+
+QTabBar::tab {
+    background-color: #404040;
+    color: #ffffff;
+    padding: 8px 16px;
+    margin-right: 2px;
+    border: 1px solid #555555;
+    border-bottom: none;
+    border-radius: 4px 4px 0 0;
+}
+
+QTabBar::tab:selected {
+    background-color: #0078d4;
+    color: #ffffff;
+}
+
+QTabBar::tab:hover {
+    background-color: #505050;
+}
+
+QGroupBox {
+    font-weight: bold;
+    border: 2px solid #555555;
+    border-radius: 5px;
+    margin-top: 1ex;
+    background-color: #333333;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 10px 0 10px;
+    color: #ffffff;
+}
+
+QPushButton {
+    background-color: #404040;
+    color: #ffffff;
+    border: 1px solid #555555;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #505050;
+}
+
+QPushButton:pressed {
+    background-color: #0078d4;
+}
+
+QPushButton:disabled {
+    background-color: #333333;
+    color: #888888;
+}
+
+QLineEdit, QSpinBox, QComboBox {
+    background-color: #404040;
+    color: #ffffff;
+    border: 1px solid #555555;
+    padding: 4px;
+    border-radius: 3px;
+}
+
+QLineEdit:focus, QSpinBox:focus, QComboBox:focus {
+    border: 1px solid #0078d4;
+}
+
+QLabel {
+    color: #ffffff;
+}
+
+QTableWidget {
+    background-color: #333333;
+    color: #ffffff;
+    gridline-color: #555555;
+    border: 1px solid #555555;
+}
+
+QTableWidget::item {
+    padding: 4px;
+    border-bottom: 1px solid #444444;
+}
+
+QTableWidget::item:selected {
+    background-color: #0078d4;
+}
+
+QHeaderView::section {
+    background-color: #404040;
+    color: #ffffff;
+    padding: 6px;
+    border: 1px solid #555555;
+    font-weight: bold;
+}
+
+QProgressBar {
+    border: 1px solid #555555;
+    border-radius: 3px;
+    text-align: center;
+    background-color: #333333;
+}
+
+QProgressBar::chunk {
+    background-color: #0078d4;
+    width: 10px;
+}
+
+QScrollBar:vertical {
+    background-color: #333333;
+    width: 15px;
+    margin: 0px;
+}
+
+QScrollBar::handle:vertical {
+    background-color: #555555;
+    min-height: 30px;
+    border-radius: 7px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background-color: #666666;
+}
+
+QScrollBar::add-line:vertical, QScrollBar::sub-line:vertical {
+    background: none;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+QStatusBar {
+    background-color: #404040;
+    color: #ffffff;
+    border-top: 1px solid #555555;
+}
+
+QMenuBar {
+    background-color: #404040;
+    color: #ffffff;
+    border-bottom: 1px solid #555555;
+}
+
+QMenuBar::item {
+    background-color: transparent;
+    padding: 4px 8px;
+}
+
+QMenuBar::item:selected {
+    background-color: #505050;
+}
+
+QMenu {
+    background-color: #404040;
+    color: #ffffff;
+    border: 1px solid #555555;
+}
+
+QMenu::item {
+    padding: 4px 20px;
+}
+
+QMenu::item:selected {
+    background-color: #0078d4;
+}
+
+/* Custom styles for StreamX */
+#streamControlWidget QPushButton#startButton {
+    background-color: #107c10;
+    color: #ffffff;
+}
+
+#streamControlWidget QPushButton#startButton:hover {
+    background-color: #0b5a0b;
+}
+
+#streamControlWidget QPushButton#stopButton {
+    background-color: #d13438;
+    color: #ffffff;
+}
+
+#streamControlWidget QPushButton#stopButton:hover {
+    background-color: #a52a2d;
+}
+
+#monitoringWidget QLabel#healthIndicator {
+    font-size: 24pt;
+    font-weight: bold;
+}
+
+#monitoringWidget QLabel#healthIndicator[health="good"] {
+    color: #107c10;
+}
+
+#monitoringWidget QLabel#healthIndicator[health="warning"] {
+    color: #ff8c00;
+}
+
+#monitoringWidget QLabel#healthIndicator[health="error"] {
+    color: #d13438;
+}
