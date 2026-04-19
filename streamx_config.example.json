@@ -1,0 +1,55 @@
+{
+  "video": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 60,
+    "bitrate_kbps": 5000,
+    "codec": "H264",
+    "pixel_format": "YUV420P",
+    "preset": "medium",
+    "enable_bframes": true,
+    "gop_size": 60
+  },
+  "audio": {
+    "sample_rate": 48000,
+    "channels": 2,
+    "bitrate_kbps": 128,
+    "codec": "AAC",
+    "sample_format": "S16"
+  },
+  "capture": {
+    "type": "desktop",
+    "display_index": 0
+  },
+  "platforms": {
+    "twitch": {
+      "enabled": true,
+      "stream_key": "your-stream-key-here",
+      "server_url": "rtmps://live-ams.twitch.tv/app/"
+    },
+    "youtube": {
+      "enabled": false,
+      "stream_key": "your-stream-key-here",
+      "server_url": "rtmps://a.rtmp.youtube.com/live2/"
+    },
+    "streamlabs": {
+      "enabled": false,
+      "stream_key": "your-stream-key-here",
+      "server_url": "rtmps://live-ams.twitch.tv/app/"
+    }
+  },
+  "buffer": {
+    "max_frames": 120,
+    "timeout_ms": 1000
+  },
+  "encoding": {
+    "gpu_enabled": false,
+    "max_cpu_percent": 80,
+    "adaptive_bitrate": true
+  },
+  "logging": {
+    "level": "info",
+    "file": "streamx.log",
+    "console": true
+  }
+}
