@@ -34,6 +34,7 @@ private:
     void ConnectSignals();
     void ApplyStylesheet();
     void StartUpdateTimer();
+    void LoadPlatformsFromConfig();
 
     QTabWidget* tab_widget_;
     StreamControlWidget* stream_control_;

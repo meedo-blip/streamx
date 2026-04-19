@@ -5,6 +5,7 @@
 #include <QGroupBox>
 #include <QLabel>
 #include <QMessageBox>
+#include <QLocale>
 
 SettingsWidget::SettingsWidget(streamx::StreamingController* controller, QWidget* parent)
     : QWidget(parent), controller_(controller) {
@@ -24,12 +25,14 @@ void SettingsWidget::CreateUI() {
     QHBoxLayout* resolution_row = new QHBoxLayout();
     resolution_row->addWidget(new QLabel("Resolution:"));
     width_spinbox_ = new QSpinBox();
+    width_spinbox_->setLocale(QLocale::c());
     width_spinbox_->setValue(1920);
     width_spinbox_->setMinimum(640);
     width_spinbox_->setMaximum(4096);
     resolution_row->addWidget(width_spinbox_);
     resolution_row->addWidget(new QLabel("x"));
     height_spinbox_ = new QSpinBox();
+    height_spinbox_->setLocale(QLocale::c());
     height_spinbox_->setValue(1080);
     height_spinbox_->setMinimum(480);
     height_spinbox_->setMaximum(2160);
@@ -41,6 +44,7 @@ void SettingsWidget::CreateUI() {
     QHBoxLayout* fps_bitrate_row = new QHBoxLayout();
     fps_bitrate_row->addWidget(new QLabel("FPS:"));
     fps_spinbox_ = new QSpinBox();
+    fps_spinbox_->setLocale(QLocale::c());
     fps_spinbox_->setValue(60);
     fps_spinbox_->setMinimum(24);
     fps_spinbox_->setMaximum(120);
@@ -86,6 +90,7 @@ void SettingsWidget::CreateUI() {
     bframes_gop_row->addSpacing(20);
     bframes_gop_row->addWidget(new QLabel("GOP Size:"));
     gop_size_spinbox_ = new QSpinBox();
+    gop_size_spinbox_->setLocale(QLocale::c());
     gop_size_spinbox_->setValue(60);
     gop_size_spinbox_->setMinimum(1);
     gop_size_spinbox_->setMaximum(300);
@@ -100,24 +105,25 @@ void SettingsWidget::CreateUI() {
     QVBoxLayout* audio_layout = new QVBoxLayout(audio_group);
 
     QHBoxLayout* audio_row = new QHBoxLayout();
-    audio_row->addWidget(new QLabel("Sample Rate (Hz):"));
+audio_row->addWidget(new QLabel("Sample Rate (Hz):"));
     sample_rate_spinbox_ = new QSpinBox();
+    sample_rate_spinbox_->setLocale(QLocale::c());
     sample_rate_spinbox_->setValue(48000);
     sample_rate_spinbox_->setMinimum(16000);
     sample_rate_spinbox_->setMaximum(192000);
-    audio_row->addWidget(sample_rate_spinbox_);
 
     audio_row->addSpacing(20);
     audio_row->addWidget(new QLabel("Channels:"));
     channels_spinbox_ = new QSpinBox();
+    channels_spinbox_->setLocale(QLocale::c());
     channels_spinbox_->setValue(2);
     channels_spinbox_->setMinimum(1);
     channels_spinbox_->setMaximum(8);
-    audio_row->addWidget(channels_spinbox_);
 
     audio_row->addSpacing(20);
     audio_row->addWidget(new QLabel("Bitrate (kbps):"));
     audio_bitrate_spinbox_ = new QSpinBox();
+    audio_bitrate_spinbox_->setLocale(QLocale::c());
     audio_bitrate_spinbox_->setValue(128);
     audio_bitrate_spinbox_->setMinimum(64);
     audio_bitrate_spinbox_->setMaximum(320);

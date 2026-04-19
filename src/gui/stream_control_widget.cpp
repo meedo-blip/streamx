@@ -1,11 +1,20 @@
 #include "streamx/gui/stream_control_widget.h"
 #include "streamx/utils/logger.h"
+#include "streamx/utils/config.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QGroupBox>
 #include <QLabel>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <sys/types.h>
+#include <pwd.h>
+
+static std::string GetConfigPath() {
+    struct passwd* pw = getpwuid(getuid());
+    std::string config_dir = std::string(pw ? pw->pw_dir : "/home") + "/.config/streamx";
+    return config_dir + "/config.json";
+}
 
 StreamControlWidget::StreamControlWidget(streamx::StreamingController* controller, QWidget* parent)
     : QWidget(parent), controller_(controller) {
@@ -157,6 +166,21 @@ void StreamControlWidget::OnAddPlatformClicked() {
                                            QLineEdit::Password, "", &ok);
         if (ok && !key.isEmpty()) {
             std::string platform_lower = platform.toLower().toStdString();
+            
+            // Check if already exists
+            auto existing = controller_->GetAllPlatforms();
+            bool found = false;
+            for (const auto& p : existing) {
+                if (p == platform_lower) {
+                    found = true;
+                    break;
+                }
+            }
+            if (found) {
+                QMessageBox::warning(this, "Already Added", "This platform is already configured");
+                return;
+            }
+            
             std::string server_url;
             if (platform == "Custom RTMP") {
                 QString server = QInputDialog::getText(this, "RTMP Server URL",
@@ -172,6 +196,15 @@ void StreamControlWidget::OnAddPlatformClicked() {
                                          key.toStdString(), server_url)) {
                 platform_selector_->addItem(platform);
                 STREAMX_INFO("Platform added: " + platform.toStdString());
+                
+                // Save to config
+                auto& config = streamx::Config::Instance();
+                config["platforms"][platform_lower]["stream_key"] = key.toStdString();
+                if (!server_url.empty()) {
+                    config["platforms"][platform_lower]["server_url"] = server_url;
+                }
+                config.SaveToFile(GetConfigPath());
+                STREAMX_INFO("Config saved for: " + platform_lower);
             } else {
                 QMessageBox::warning(this, "Error", "Failed to add platform");
             }
@@ -191,6 +224,20 @@ void StreamControlWidget::OnRemovePlatformClicked() {
         platform_selector_->removeItem(index);
         STREAMX_INFO("Platform removed: " + platform.toStdString());
     }
+}
+
+void StreamControlWidget::RefreshPlatforms() {
+    platform_selector_->clear();
+    auto platforms = controller_->GetAllPlatforms();
+    for (const auto& p : platforms) {
+        // Capitalize first letter
+        std::string name = p;
+        if (!name.empty()) {
+            name[0] = toupper(name[0]);
+        }
+        platform_selector_->addItem(QString::fromStdString(name));
+    }
+    STREAMX_INFO("Refreshed platform selector with " + std::to_string(platforms.size()) + " platforms");
 }
 
 void StreamControlWidget::UpdateControlState() {

@@ -4,6 +4,7 @@
 #include "streamx/gui/platforms_widget.h"
 #include "streamx/gui/settings_widget.h"
 #include "streamx/utils/logger.h"
+#include "streamx/utils/config.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QMenuBar>
@@ -35,6 +36,10 @@ MainWindow::MainWindow(QWidget* parent)
     controller_->Initialize(video, audio);
 
     CreateUI();
+    
+    // Load platforms from config AFTER UI is created
+    LoadPlatformsFromConfig();
+    
     CreateMenuBar();
     CreateStatusBar();
     ConnectSignals();
@@ -210,6 +215,40 @@ void MainWindow::OnStreamStopped() {
 void MainWindow::OnError(const QString& error) {
     STREAMX_ERROR("GUI Error: " + error.toStdString());
     status_label_->setText("Error: " + error);
+}
+
+void MainWindow::LoadPlatformsFromConfig() {
+    auto& config = streamx::Config::Instance();
+    STREAMX_INFO("LoadPlatformsFromConfig: checking for platforms...");
+    
+    if (!config.Contains("platforms")) {
+        STREAMX_INFO("No platforms key in config");
+        return;
+    }
+
+    auto& platforms = config["platforms"];
+    STREAMX_INFO("Found platforms in config: " + platforms.dump());
+    
+    for (auto& [name, platform_config] : platforms.items()) {
+        std::string stream_key;
+        std::string server_url;
+
+        if (platform_config.contains("stream_key")) {
+            stream_key = platform_config["stream_key"];
+        }
+        if (platform_config.contains("server_url")) {
+            server_url = platform_config["server_url"];
+        }
+
+        if (!stream_key.empty()) {
+            controller_->AddPlatform(name, name, stream_key, server_url);
+            STREAMX_INFO("Loaded platform from config: " + name);
+        }
+    }
+    
+    // Refresh the platforms table to show loaded platforms
+    platforms_->RefreshPlatformsList();
+    stream_control_->RefreshPlatforms();
 }
 
 void MainWindow::closeEvent(QCloseEvent* event) {

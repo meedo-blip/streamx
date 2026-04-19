@@ -35,8 +35,11 @@ bool StreamingController::Initialize(const VideoConfig& video_config, const Audi
 
 bool StreamingController::AddPlatform(const std::string& name, const std::string& platform_type,
                                      const std::string& stream_key, const std::string& server_url) {
+    STREAMX_INFO("AddPlatform called: name=" + name + " type=" + platform_type);
+    
     // Normalize platform name to lowercase for consistency
     std::string normalized_name = name;
+    std::transform(normalized_name.begin(), normalized_name.end(), normalized_name.begin(), ::tolower);
     std::transform(normalized_name.begin(), normalized_name.end(), normalized_name.begin(), ::tolower);
     
     std::unique_ptr<IStreamingPlatform> platform;
@@ -54,6 +57,7 @@ bool StreamingController::AddPlatform(const std::string& name, const std::string
     }
 
     if (!platform_manager_->AddPlatform(normalized_name, std::move(platform))) {
+        STREAMX_ERROR("AddPlatform failed - platform_manager returned false");
         return false;
     }
 
@@ -64,6 +68,7 @@ bool StreamingController::AddPlatform(const std::string& name, const std::string
     config.server_url = server_url;
     platform_configs_[normalized_name] = config;
 
+    STREAMX_INFO("AddPlatform completed successfully for: " + normalized_name);
     return true;
 }
 

@@ -11,12 +11,12 @@ class PlatformsWidget : public QWidget {
 
 public:
     explicit PlatformsWidget(streamx::StreamingController* controller, QWidget* parent = nullptr);
+    void RefreshPlatformsList();
 
 private slots:
     void OnAddPlatformClicked();
     void OnRemovePlatformClicked();
     void OnEditClicked();
-    void RefreshPlatformsList();
 
 private:
     void CreateUI();

@@ -1,10 +1,22 @@
+#include <QCoreApplication>
+#include <sys/types.h>
+#include <pwd.h>
+
 #include "streamx/gui/platforms_widget.h"
 #include "streamx/utils/logger.h"
+#include "streamx/utils/config.h"
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 #include <QHeaderView>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <iostream>
+
+static std::string GetConfigPath() {
+    struct passwd* pw = getpwuid(getuid());
+    std::string config_dir = std::string(pw ? pw->pw_dir : "/home") + "/.config/streamx";
+    return config_dir + "/config.json";
+}
 
 PlatformsWidget::PlatformsWidget(streamx::StreamingController* controller, QWidget* parent)
     : QWidget(parent), controller_(controller) {
@@ -79,6 +91,14 @@ void PlatformsWidget::ShowAddPlatformDialog() {
 
     if (controller_->AddPlatform(platform_lower, platform_lower,
                                  stream_key.toStdString(), server_url)) {
+        // Save platform config
+        auto& config = streamx::Config::Instance();
+        config["platforms"][platform_lower]["stream_key"] = stream_key.toStdString();
+        if (!server_url.empty()) {
+            config["platforms"][platform_lower]["server_url"] = server_url;
+        }
+        config.SaveToFile(GetConfigPath());
+
         RefreshPlatformsList();
         STREAMX_INFO("Platform added: " + platform_name.toStdString());
     } else {
@@ -99,6 +119,11 @@ void PlatformsWidget::OnRemovePlatformClicked() {
 
     QString platform_name = platforms_table_->item(current_row, 0)->text();
     if (controller_->RemovePlatform(platform_name.toStdString())) {
+        // Remove from config
+        auto& config = streamx::Config::Instance();
+        config["platforms"].erase(platform_name.toStdString());
+        config.SaveToFile(GetConfigPath());
+
         RefreshPlatformsList();
         STREAMX_INFO("Platform removed: " + platform_name.toStdString());
     }
@@ -116,6 +141,11 @@ void PlatformsWidget::OnEditClicked() {
                                            "Enter new stream key for " + platform_name + ":",
                                            QLineEdit::Password, "", nullptr);
     if (!new_key.isEmpty()) {
+        // Update config
+        auto& config = streamx::Config::Instance();
+        config["platforms"][platform_name.toStdString()]["stream_key"] = new_key.toStdString();
+        config.SaveToFile(GetConfigPath());
+
         STREAMX_INFO("Stream key updated for: " + platform_name.toStdString());
         RefreshPlatformsList();
     }

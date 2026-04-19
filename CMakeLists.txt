@@ -17,6 +17,7 @@ option(BUILD_GUI "Build GUI application" ON)
 
 # Find required packages
 find_package(Threads REQUIRED)
+find_package(OpenSSL REQUIRED)
 
 # Try to find FFmpeg - with fallback to pkg-config
 find_package(FFmpeg QUIET COMPONENTS avutil avcodec avformat avdevice swscale)
@@ -186,6 +187,7 @@ target_link_libraries(streamx_core
     PUBLIC ${FFMPEG_LIBRARIES}
     PUBLIC ${PIPEWIRE_LIBRARIES}
     PUBLIC ${LIBPORTAL_LIBRARIES}
+    PUBLIC OpenSSL::Crypto
 )
 
 if(BUILD_GUI)

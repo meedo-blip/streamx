@@ -10,15 +10,15 @@ namespace streamx {
 
 using json = nlohmann::json;
 
-// Configuration manager for loading/saving settings
+// Configuration manager for loading/saving settings with encryption
 class Config {
 public:
     static Config& Instance();
 
-    // Load configuration from file
+    // Load configuration from file (auto-decrypts if encrypted)
     bool LoadFromFile(const std::string& filename);
     
-    // Save configuration to file
+    // Save configuration to file (auto-encrypts)
     bool SaveToFile(const std::string& filename) const;
 
     // Get/Set values
@@ -50,11 +50,29 @@ public:
         data_.clear();
     }
 
+    bool Contains(const std::string& key) const {
+        return data_.contains(key);
+    }
+
+    json& operator[](const std::string& key) {
+        return data_[key];
+    }
+
+    const json& operator[](const std::string& key) const {
+        return data_[key];
+    }
+
     const json& GetRaw() const { return data_; }
     void SetRaw(const json& data) { data_ = data; }
 
 private:
     Config();
+
+    // Encryption helpers using OpenSSL AES-256-CBC
+    std::string Encrypt(const std::string& plaintext) const;
+    std::string Decrypt(const std::string& ciphertext) const;
+    std::string GetEncryptionKey() const;
+
     json data_;
     std::string config_file_;
     mutable std::mutex config_mutex_;

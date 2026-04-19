@@ -12,6 +12,7 @@ class StreamControlWidget : public QWidget {
 
 public:
     explicit StreamControlWidget(streamx::StreamingController* controller, QWidget* parent = nullptr);
+    void RefreshPlatforms();
 
 signals:
     void StreamStarted();
